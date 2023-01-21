@@ -3,20 +3,20 @@ import random
 from tkinter import Tk, PhotoImage, Canvas, Button
 
 BACKGROUND_COLOR = "#B1DDC6"
+current_card = {}
+to_learn = {}
 
 # ------------------------ READ CSV DATA ------------------------- #
 try:
-    words_to_learn = pandas.read_csv("data/words_to_learn.csv")
+    data = pandas.read_csv("data/words_to_learn.csv")
 except FileNotFoundError:
-    with open("data/words_to_learn.csv", "w"):
-        # Creates a new csv file 'words_to_learn' if it doesn't exist
-        pass
+    original_data = pandas.read_csv("data/french_words.csv")
+    to_learn = original_data.to_dict(orient="records")
 except pandas.errors.EmptyDataError:
-    words_to_learn = pandas.read_csv("data/french_words.csv")
-
-to_learn = words_to_learn.to_dict(orient="records")
-print(f"Words to learn: {len(to_learn)}")
-current_card = {}
+    original_data = pandas.read_csv("data/french_words.csv")
+    to_learn = original_data.to_dict(orient="records")
+else:
+    to_learn = data.to_dict(orient="records")
 
 
 # ---------------------------- CARDS ----------------------------- #
@@ -45,7 +45,6 @@ def flip_card():
 # ----------------- ANSWERS AND SAVING PROGRESS ------------------ #
 
 def known_word():
-    next_card()
     try:
         to_learn.remove(current_card)
     except ValueError:
@@ -53,6 +52,7 @@ def known_word():
     else:
         df = pandas.DataFrame(to_learn)
         df.to_csv("data/words_to_learn.csv", index=False)
+        next_card()
 
 
 # --------------------------- UI SETUP --------------------------- #
