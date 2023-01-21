@@ -1,6 +1,20 @@
+import pandas
+import random
 from tkinter import Tk, PhotoImage, Canvas, Button
 
 BACKGROUND_COLOR = "#B1DDC6"
+
+# ------------------------ READ CSV DATA ------------------------- #
+data = pandas.read_csv("data/french_words.csv")
+to_learn = data.to_dict(orient="records")
+
+
+# ---------------------------- CARDS ----------------------------- #
+def next_card():
+    current_card = random.choice(to_learn)
+    canvas.itemconfig(card_title, text="French")
+    canvas.itemconfig(card_word, text=current_card["French"])
+
 
 # --------------------------- UI SETUP --------------------------- #
 # App window
@@ -18,14 +32,16 @@ wrong_img = PhotoImage(file="images/wrong.png")
 canvas = Canvas(width=800, height=526, bg=BACKGROUND_COLOR, highlightthickness=0)
 canvas.create_image(400, 263, image=card_front_img)
 canvas.grid(row=1, column=1, columnspan=2)
-canvas.create_text(400, 150, text="Title", font=("Ariel", 40, "italic"))
-canvas.create_text(400, 263, text="Word", font=("Ariel", 60, "bold"))
+card_title = canvas.create_text(400, 150, text="", font=("Ariel", 40, "italic"))
+card_word = canvas.create_text(400, 263, text="", font=("Ariel", 60, "bold"))
 
 # Buttons
-wrong_btn = Button(image=wrong_img, highlightthickness=0, bg=BACKGROUND_COLOR, borderwidth=0)
+wrong_btn = Button(image=wrong_img, highlightthickness=0, bg=BACKGROUND_COLOR, borderwidth=0, command=next_card)
 wrong_btn.grid(row=2, column=1, pady=50)
 
-right_btn = Button(image=right_img, highlightthickness=0, bg=BACKGROUND_COLOR, borderwidth=0)
+right_btn = Button(image=right_img, highlightthickness=0, bg=BACKGROUND_COLOR, borderwidth=0, command=next_card)
 right_btn.grid(row=2, column=2, pady=50)
+
+next_card()
 
 window.mainloop()
