@@ -55,10 +55,6 @@ def known_word():
         df.to_csv("data/words_to_learn.csv", index=False)
 
 
-def unknown_word():
-    next_card()
-
-
 # --------------------------- UI SETUP --------------------------- #
 # App window
 window = Tk()
@@ -81,7 +77,7 @@ card_title = canvas.create_text(400, 150, text="", font=("Ariel", 40, "italic"))
 card_word = canvas.create_text(400, 263, text="", font=("Ariel", 60, "bold"))
 
 # Buttons
-wrong_btn = Button(image=wrong_img, highlightthickness=0, bg=BACKGROUND_COLOR, borderwidth=0, command=unknown_word)
+wrong_btn = Button(image=wrong_img, highlightthickness=0, bg=BACKGROUND_COLOR, borderwidth=0, command=next_card)
 wrong_btn.grid(row=2, column=1, pady=50)
 
 right_btn = Button(image=right_img, highlightthickness=0, bg=BACKGROUND_COLOR, borderwidth=0, command=known_word)
