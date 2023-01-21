@@ -7,18 +7,21 @@ BACKGROUND_COLOR = "#B1DDC6"
 # ------------------------ READ CSV DATA ------------------------- #
 data = pandas.read_csv("data/french_words.csv")
 to_learn = data.to_dict(orient="records")
+current_card = {}
 
 
 # ---------------------------- CARDS ----------------------------- #
 def next_card():
+    global current_card, flip_timer
+    window.after_cancel(flip_timer)
     current_card = random.choice(to_learn)
     canvas.itemconfig(card, image=card_front_img)
     canvas.itemconfig(card_title, text="French", fill="black")
     canvas.itemconfig(card_word, text=current_card["French"], fill="black")
-    window.after(3000, lambda: flip_card(current_card))
+    flip_timer = window.after(3000, flip_card)
 
 
-def flip_card(current_card):
+def flip_card():
     canvas.itemconfig(card, image=card_back_img)
     canvas.itemconfig(card_title, text="English", fill="white")
     canvas.itemconfig(card_word, text=current_card["English"], fill="white")
@@ -29,6 +32,8 @@ def flip_card(current_card):
 window = Tk()
 window.title("Flash Cards App")
 window.config(padx=50, pady=50, bg=BACKGROUND_COLOR)
+
+flip_timer = window.after(3000, flip_card)
 
 # Images
 card_back_img = PhotoImage(file="images/card_back.png")
